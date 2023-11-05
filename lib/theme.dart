@@ -13,5 +13,5 @@ abstract class AppTheme {
         ),
       );
 
-  static const verticalSpacing = SizedBox(height: 20);
+  static const verticalSpacing = SizedBox(height: 16);
 }
