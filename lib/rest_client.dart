@@ -11,4 +11,10 @@ abstract class RestClient {
 
   @GET('/users')
   Future<List<User>> getUsers();
+
+  @GET('/albums')
+  Future<List<Album>> getAlbums(@Query('userId') int userId);
+
+  @GET('/photos')
+  Future<List<Photo>> getPhotos(@Query('albumId') int albumId);
 }

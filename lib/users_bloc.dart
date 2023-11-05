@@ -31,8 +31,9 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
         return;
       }
 
-      emit(UsersShowing(openedUser: users.first));
       _openedUserIndex = 0;
+
+      emit(UsersShowing(openedUser: users.first));
     } on Exception {
       emit(UsersError());
     }
@@ -41,8 +42,11 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
   FutureOr<void> _onUsersGetPrevious(
     UsersGetPrevious event,
     Emitter<UsersState> emit,
-  ) {
-    final user = usersRepository.getUser(_openedUserIndex - 1);
+  ) async {
+    final user = await usersRepository.getUser(_openedUserIndex - 1);
+
+    if (user == null) emit(UsersError());
+
     _openedUserIndex--;
 
     emit(UsersShowing(openedUser: user!));
@@ -51,8 +55,11 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
   FutureOr<void> _onUsersGetNext(
     UsersGetNext event,
     Emitter<UsersState> emit,
-  ) {
-    final user = usersRepository.getUser(_openedUserIndex + 1);
+  ) async {
+    final user = await usersRepository.getUser(_openedUserIndex + 1);
+
+    if (user == null) emit(UsersError());
+
     _openedUserIndex++;
 
     emit(UsersShowing(openedUser: user!));

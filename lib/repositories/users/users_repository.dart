@@ -19,7 +19,9 @@ class UsersRepository implements AbstractUsersRepository {
   }
 
   @override
-  User? getUser(int index) {
+  Future<User?> getUser(int index) async {
+    if (_items.isEmpty) return null;
+
     if (index > _items.length - 1) {
       final newIndex = index % _items.length;
 
@@ -28,6 +30,7 @@ class UsersRepository implements AbstractUsersRepository {
 
     if (index < 0) {
       final newIndex = _items.length + index;
+
       return _items[newIndex];
     }
 
