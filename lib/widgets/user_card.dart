@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../dialogs/user_photos_dialog.dart';
 import '../models/models.dart';
 import '../repositories/repositories.dart';
 import '../theme.dart';
@@ -61,41 +62,46 @@ class _UserAvatar extends StatelessWidget {
         albumsRepository: context.read<AbstractAlbumsRepository>(),
         photosRepository: context.read<AbstractPhotosRepository>(),
       ),
-      child: const _UserAvatarView(),
+      child: _UserAvatarView(userId: userId),
     );
   }
 }
 
 class _UserAvatarView extends StatelessWidget {
-  const _UserAvatarView({Key? key}) : super(key: key);
+  final int userId;
+
+  const _UserAvatarView({Key? key, required this.userId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: BlocBuilder<UserAvatarCubit, UserAvatarState>(
-        builder: (context, state) {
-          if (state is UserAvatarLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      child: InkWell(
+        onTap: () => UserPhotosDialog.show(context: context, userId: userId),
+        child: BlocBuilder<UserAvatarCubit, UserAvatarState>(
+          builder: (context, state) {
+            if (state is UserAvatarLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (state is UserAvatarLoadedNoPhoto) {
-            return const Icon(Icons.person, size: 64);
-          }
+            if (state is UserAvatarLoadedNoPhoto) {
+              return const Icon(Icons.person, size: 64);
+            }
 
-          if (state is UserAvatarLoaded) {
-            return Image.network(
-              state.photo.url,
-              fit: BoxFit.cover,
-              loadingBuilder: (_, child, loadingProgress) {
-                if (loadingProgress == null) return child;
+            if (state is UserAvatarLoaded) {
+              return Image.network(
+                state.photo.url,
+                fit: BoxFit.cover,
+                loadingBuilder: (_, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
 
-                return const Center(child: CircularProgressIndicator());
-              },
-            );
-          }
+                  return const Center(child: CircularProgressIndicator());
+                },
+              );
+            }
 
-          return const Center(child: Text('Error'));
-        },
+            return const Center(child: Text('Error'));
+          },
+        ),
       ),
     );
   }

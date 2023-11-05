@@ -2,10 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'main_page.dart';
 import 'repositories/repositories.dart';
 import 'rest_client.dart';
 import 'theme.dart';
+import 'users_page.dart';
 
 void main() {
   final restClient = RestClient(Dio());
@@ -47,7 +47,7 @@ class EclipseTestApp extends StatelessWidget {
             RepositoryProvider.value(value: albumsRepository),
             RepositoryProvider.value(value: photosRepository),
           ],
-          child: const MainPage(),
+          child: const UsersPage(),
         ),
       ),
     );

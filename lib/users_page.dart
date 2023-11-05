@@ -5,21 +5,21 @@ import 'repositories/users/abstract_users_repository.dart';
 import 'users_bloc.dart';
 import 'widgets/user_card.dart';
 
-class MainPage extends StatelessWidget {
-  const MainPage({Key? key}) : super(key: key);
+class UsersPage extends StatelessWidget {
+  const UsersPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
           UsersBloc(context.read<AbstractUsersRepository>())..add(UsersLoad()),
-      child: const _MainPage(),
+      child: const _UsersPageView(),
     );
   }
 }
 
-class _MainPage extends StatelessWidget {
-  const _MainPage({Key? key}) : super(key: key);
+class _UsersPageView extends StatelessWidget {
+  const _UsersPageView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
