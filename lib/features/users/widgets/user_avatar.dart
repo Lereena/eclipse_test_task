@@ -15,7 +15,6 @@ class UserAvatar extends StatelessWidget {
     return BlocProvider(
       create: (context) => UserAvatarCubit(
         userId: userId,
-        albumsRepository: context.read<AbstractAlbumsRepository>(),
         photosRepository: context.read<AbstractPhotosRepository>(),
       ),
       child: _UserAvatarView(userId: userId),

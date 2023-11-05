@@ -7,13 +7,10 @@ import '../../../../repositories/repositories.dart';
 part 'user_avatar_state.dart';
 
 class UserAvatarCubit extends Cubit<UserAvatarState> {
-  final AbstractAlbumsRepository albumsRepository;
   final AbstractPhotosRepository photosRepository;
-
   final int userId;
 
   UserAvatarCubit({
-    required this.albumsRepository,
     required this.photosRepository,
     required this.userId,
   }) : super(UserAvatarLoading()) {
@@ -23,11 +20,7 @@ class UserAvatarCubit extends Cubit<UserAvatarState> {
   Future<void> _getAvatar() async {
     emit(UserAvatarLoading());
     try {
-      final albums = await albumsRepository.loadAlbums(userId);
-
-      if (albums.isEmpty) emit(UserAvatarLoadedNoPhoto());
-
-      final photos = await photosRepository.loadPhotos(albums.first.id);
+      final photos = await photosRepository.loadUserPhotos(userId);
 
       if (photos.isEmpty) emit(UserAvatarLoadedNoPhoto());
 

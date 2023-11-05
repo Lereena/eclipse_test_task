@@ -1,5 +1,5 @@
 import '../../models/models.dart';
 
 abstract class AbstractPhotosRepository {
-  Future<List<Photo>> loadPhotos(int albumId);
+  Future<List<Photo>> loadUserPhotos(int userId);
 }

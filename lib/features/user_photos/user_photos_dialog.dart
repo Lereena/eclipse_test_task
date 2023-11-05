@@ -16,7 +16,6 @@ class UserPhotosDialog extends StatelessWidget {
         builder: (_) => BlocProvider(
           create: (_) => UserPhotosCubit(
             userId: userId,
-            albumsRepository: context.read<AbstractAlbumsRepository>(),
             photosRepository: context.read<AbstractPhotosRepository>(),
           ),
           child: const UserPhotosDialog(),

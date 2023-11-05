@@ -8,7 +8,13 @@ class PhotosRepository implements AbstractPhotosRepository {
   PhotosRepository({required this.restClient});
 
   @override
-  Future<List<Photo>> loadPhotos(int albumId) async {
-    return restClient.getPhotos(albumId);
+  Future<List<Photo>> loadUserPhotos(int userId) async {
+    final albums = await restClient.getAlbums(userId);
+
+    if (albums.isEmpty) return [];
+
+    final photos = await restClient.getPhotos(albums.first.id);
+
+    return photos;
   }
 }
