@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'news/main_page.dart';
+import 'main_page.dart';
 import 'theme.dart';
 
 void main() {
