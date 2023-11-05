@@ -1,61 +1,74 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'repositories/users/models/models.dart';
+import 'repositories/users/abstract_users_repository.dart';
+import 'users_bloc.dart';
 import 'widgets/user_card.dart';
-
-final user = User(
-  id: '1',
-  name: 'Kitty cat asdf asdf asdv asdca` zedf asegvasefaedf',
-  company: Company(
-    name: 'Fufelshmerz Inc. asdfas dfawe fszefv sdbfzesfda efsdgas`e sf se f',
-    catchPhraze: '',
-    bs: '',
-  ),
-  username: 'kit',
-  email: 'kit@fflmz.com',
-  address: Address(
-    street: 'Mock street',
-    suite: '2',
-    city: 'New York',
-    zipcode: '123-432',
-    geo: Coordinates(lat: 124.123, lng: -1244.01),
-  ),
-  phone: '+9 234 234135',
-  website: 'kit.com',
-);
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) =>
+          UsersBloc(context.read<AbstractUsersRepository>())..add(UsersLoad()),
+      child: const _MainPage(),
+    );
+  }
+}
+
+class _MainPage extends StatelessWidget {
+  const _MainPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Column(
-        children: [
-          Expanded(
-            flex: 3,
-            child: UserCard(user: user),
-          ),
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: BlocBuilder<UsersBloc, UsersState>(
+        builder: (context, state) {
+          if (state is UsersLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state is UsersShowing) {
+            return Column(
               children: [
-                IconButton(
-                  iconSize: 64,
-                  onPressed: () {},
-                  icon: const Icon(Icons.arrow_back),
+                Expanded(
+                  flex: 4,
+                  child: UserCard(user: state.openedUser),
                 ),
-                IconButton(
-                  iconSize: 64,
-                  onPressed: () {},
-                  icon: const Icon(Icons.arrow_forward),
-                ),
+                const Expanded(child: _CardsSwitcher()),
               ],
-            ),
-          ),
-        ],
+            );
+          }
+
+          return const Center(child: Text('Error'));
+        },
       ),
+    );
+  }
+}
+
+class _CardsSwitcher extends StatelessWidget {
+  const _CardsSwitcher({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        IconButton(
+          iconSize: 64,
+          onPressed: () => context.read<UsersBloc>().add(UsersGetPrevious()),
+          icon: const Icon(Icons.arrow_back),
+        ),
+        IconButton(
+          iconSize: 64,
+          onPressed: () => context.read<UsersBloc>().add(UsersGetNext()),
+          icon: const Icon(Icons.arrow_forward),
+        ),
+      ],
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../repositories/users/models/models.dart';
+import '../models/models.dart';
 import '../theme.dart';
 import 'bullet_line.dart';
 
@@ -24,7 +24,15 @@ class UserCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
-            Image.network(kittenUrl, fit: BoxFit.cover),
+            Image.network(
+              kittenUrl,
+              fit: BoxFit.cover,
+              loadingBuilder: (_, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+
+                return const Center(child: CircularProgressIndicator());
+              },
+            ),
             AppTheme.verticalSpacing,
             Text(
               user.name,
