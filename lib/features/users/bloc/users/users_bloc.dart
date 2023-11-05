@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
-import 'models/models.dart';
-import 'repositories/users/abstract_users_repository.dart';
+import '../../../../models/models.dart';
+import '../../../../repositories/repositories.dart';
 
 part 'users_event.dart';
 part 'users_state.dart';

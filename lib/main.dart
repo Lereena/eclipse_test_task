@@ -2,10 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'features/users/users_page.dart';
 import 'repositories/repositories.dart';
 import 'rest_client.dart';
 import 'theme.dart';
-import 'users_page.dart';
 
 void main() {
   final restClient = RestClient(Dio());

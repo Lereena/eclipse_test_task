@@ -1,39 +1,39 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
-import 'models/models.dart';
-import 'repositories/repositories.dart';
+import '../../../models/models.dart';
+import '../../../repositories/repositories.dart';
 
-part 'user_album_photos_state.dart';
+part 'user_photos_state.dart';
 
-class UserAlbumPhotosCubit extends Cubit<UserAlbumPhotosState> {
+class UserPhotosCubit extends Cubit<UserPhotosState> {
   final AbstractAlbumsRepository albumsRepository;
   final AbstractPhotosRepository photosRepository;
 
   final int userId;
 
-  UserAlbumPhotosCubit({
+  UserPhotosCubit({
     required this.albumsRepository,
     required this.photosRepository,
     required this.userId,
-  }) : super(UserAlbumPhotosLoading()) {
+  }) : super(UserPhotosLoading()) {
     _loadPhotos();
   }
 
   Future<void> _loadPhotos() async {
-    emit(UserAlbumPhotosLoading());
+    emit(UserPhotosLoading());
     try {
       final albums = await albumsRepository.loadAlbums(userId);
 
-      if (albums.isEmpty) emit(UserAlbumPhotosLoadedNoPhotos());
+      if (albums.isEmpty) emit(UserPhotosLoadedNoPhotos());
 
       final photos = await photosRepository.loadPhotos(albums.first.id);
 
-      if (photos.isEmpty) emit(UserAlbumPhotosLoadedNoPhotos());
+      if (photos.isEmpty) emit(UserPhotosLoadedNoPhotos());
 
-      emit(UserAlbumPhotosLoaded(photos));
+      emit(UserPhotosLoaded(photos));
     } on Exception {
-      emit(UserAlbumPhotosError());
+      emit(UserPhotosError());
     }
   }
 }

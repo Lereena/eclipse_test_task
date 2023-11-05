@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../repositories/repositories.dart';
-import '../user_album_photos_cubit.dart';
+import '../../repositories/repositories.dart';
+import 'cubit/user_photos_cubit.dart';
 
 class UserPhotosDialog extends StatelessWidget {
   const UserPhotosDialog({Key? key}) : super(key: key);
@@ -14,7 +14,7 @@ class UserPhotosDialog extends StatelessWidget {
       showDialog(
         context: context,
         builder: (_) => BlocProvider(
-          create: (_) => UserAlbumPhotosCubit(
+          create: (_) => UserPhotosCubit(
             userId: userId,
             albumsRepository: context.read<AbstractAlbumsRepository>(),
             photosRepository: context.read<AbstractPhotosRepository>(),
@@ -28,17 +28,17 @@ class UserPhotosDialog extends StatelessWidget {
     return Dialog(
       child: Stack(
         children: [
-          BlocBuilder<UserAlbumPhotosCubit, UserAlbumPhotosState>(
+          BlocBuilder<UserPhotosCubit, UserPhotosState>(
             builder: (context, state) {
-              if (state is UserAlbumPhotosLoading) {
+              if (state is UserPhotosLoading) {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              if (state is UserAlbumPhotosLoadedNoPhotos) {
+              if (state is UserPhotosLoadedNoPhotos) {
                 return const Center(child: Text('No photos'));
               }
 
-              if (state is UserAlbumPhotosLoaded) {
+              if (state is UserPhotosLoaded) {
                 return GridView(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
