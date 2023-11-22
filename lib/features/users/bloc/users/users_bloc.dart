@@ -12,30 +12,26 @@ part 'users_state.dart';
 class UsersBloc extends Bloc<UsersEvent, UsersState> {
   final AbstractUsersRepository usersRepository;
 
-  UsersBloc(this.usersRepository) : super(UsersInitialState()) {
+  UsersBloc(this.usersRepository) : super(const UsersInitialState()) {
     on<UsersLoad>(_onUsersLoad);
     on<UsersGetPrevious>(_onUsersGetPrevious);
     on<UsersGetNext>(_onUsersGetNext);
   }
 
-  int _openedUserIndex = 0;
-
   FutureOr<void> _onUsersLoad(UsersLoad event, Emitter<UsersState> emit) async {
-    emit(UsersLoading());
+    emit(const UsersLoading());
 
     try {
       final users = await usersRepository.loadUsers();
 
       if (users.isEmpty) {
-        emit(UsersError());
+        emit(const UsersError(openedUserIndex: 0));
         return;
       }
 
-      _openedUserIndex = 0;
-
-      emit(UsersShowing(openedUser: users.first));
+      emit(UsersShowing(openedUser: users.first, openedUserIndex: 0));
     } on Exception {
-      emit(UsersError());
+      emit(const UsersError(openedUserIndex: 0));
     }
   }
 
@@ -43,25 +39,25 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
     UsersGetPrevious event,
     Emitter<UsersState> emit,
   ) async {
-    final user = await usersRepository.getUser(_openedUserIndex - 1);
+    final newOpenedUserIndex = state.openedUserIndex - 1;
 
-    if (user == null) emit(UsersError());
+    final user = await usersRepository.getUser(newOpenedUserIndex);
 
-    _openedUserIndex--;
+    if (user == null) emit(UsersError(openedUserIndex: newOpenedUserIndex));
 
-    emit(UsersShowing(openedUser: user!));
+    emit(UsersShowing(openedUser: user!, openedUserIndex: newOpenedUserIndex));
   }
 
   FutureOr<void> _onUsersGetNext(
     UsersGetNext event,
     Emitter<UsersState> emit,
   ) async {
-    final user = await usersRepository.getUser(_openedUserIndex + 1);
+    final newOpenedUserIndex = state.openedUserIndex + 1;
 
-    if (user == null) emit(UsersError());
+    final user = await usersRepository.getUser(newOpenedUserIndex);
 
-    _openedUserIndex++;
+    if (user == null) emit(UsersError(openedUserIndex: newOpenedUserIndex));
 
-    emit(UsersShowing(openedUser: user!));
+    emit(UsersShowing(openedUser: user!, openedUserIndex: newOpenedUserIndex));
   }
 }
