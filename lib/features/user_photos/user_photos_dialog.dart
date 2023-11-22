@@ -38,13 +38,13 @@ class UserPhotosDialog extends StatelessWidget {
               }
 
               if (state is UserPhotosLoaded) {
-                return GridView(
+                return GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
                   ),
-                  children: state.photos
-                      .map((e) => Image.network(e.thumbnailUrl))
-                      .toList(),
+                  itemCount: state.photos.length,
+                  itemBuilder: (_, index) =>
+                      Image.network(state.photos[index].thumbnailUrl),
                 );
               }
 
